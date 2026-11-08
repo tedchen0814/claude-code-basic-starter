@@ -1,0 +1,43 @@
+---
+name: cc-notebooklm
+description: Claude Code 連接 NotebookLM MCP。說「連接 NotebookLM」時載入。
+---
+
+# 連接 NotebookLM（Claude Code 版）
+
+## 步驟
+
+### 1. 安裝
+```bash
+uv tool install notebooklm-mcp-cli   # Windows 桌面版：先設 UV_TOOL_DIR／UV_PYTHON_INSTALL_DIR 到非 AppData 位置，見 00
+# 或 pip install notebooklm-mcp-cli
+nlm --version
+```
+
+### 2. 登入
+```bash
+nlm login
+```
+（瀏覽器會開啟 Google 登入頁面）
+
+驗證：
+```bash
+nlm doctor
+```
+
+### 3. 註冊 MCP
+```bash
+nlm setup add claude-code
+```
+> 沒有 `claude` CLI（桌面版常見）時，此指令只印出設定、不會寫入：先備份 `~/.claude.json`，再手動在頂層 `mcpServers` 加入 notebooklm-mcp 執行檔的完整路徑，重開桌面版才載入。
+（這個指令會自動寫入 `~/.claude.json`，等於**所有專案、每個對話**都會載入 NotebookLM 的工具，增加固定開銷。執行前先備份 `~/.claude.json`，並告訴使用者這個影響；若只想在某個專案用，改把設定放進該專案的 `.mcp.json`，經同意再選。）
+
+### 4. 驗證
+重啟 Claude Code 後，問：「請列出我所有的 NotebookLM 筆記本。」
+
+回報格式：nlm 版本、登入狀態（nlm doctor）、MCP 設定、筆記本讀取測試結果。
+
+## 如果失敗
+- 手動編輯 `~/.claude.json`（或專案的 `.mcp.json`）的 `mcpServers` 區塊
+- 移除：`nlm setup remove claude-code`；`uv tool uninstall notebooklm-mcp-cli`；`nlm logout`
+- 從步驟 1 重來
